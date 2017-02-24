@@ -25,7 +25,7 @@ for back in backend:
     for module in module_name:
         example = importlib.import_module(module)
         result[back][module] = copy.deepcopy(example.ret_dict)
-        del sys.modules[example]
+        del sys.modules[module]
 
 output = ''
 for back in backend:
