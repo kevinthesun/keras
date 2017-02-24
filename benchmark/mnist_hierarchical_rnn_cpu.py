@@ -90,7 +90,7 @@ def train_model():
               verbose=1, validation_data=(X_test, Y_test))
 
 with profiler.Timer(ret_dict):
-    ret_dict["training_memory"] = memory_usage(proc=(train_model, ()), max_usage=True)
+    ret_dict["training_memory"] = str(memory_usage(proc=(train_model, ()), max_usage=True)[0]) + ' MB'
 
 ret_dict["training_accuracy"] = model.evaluate(X_train, Y_train, verbose=0)[1]
 

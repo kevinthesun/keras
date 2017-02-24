@@ -194,8 +194,9 @@ for iteration in range(1, 200):
         model.fit(X_train, y_train, batch_size=BATCH_SIZE, nb_epoch=1,
                   validation_data=(X_val, y_val))
     with profiler.Timer(ret_dict):
-        ret_dict["training_memory"] = max(memory_usage(proc=(train_model, ()), max_usage=True),
+        ret_dict["training_memory"] = max(memory_usage(proc=(train_model, ()), max_usage=True)[0],
                                           ret_dict["training_memory"])
+    ret_dict["training_memory"] = str(ret_dict["training_memory"]) + ' MB'
     total_time += ret_dict["training_time"]
     ret_dict["training_time"] = total_time
         

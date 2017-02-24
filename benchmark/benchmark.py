@@ -1,4 +1,5 @@
 import os
+import sys
 import json
 import copy
 import importlib
@@ -24,18 +25,19 @@ for back in backend:
     for module in module_name:
         example = importlib.import_module(module)
         result[back][module] = copy.deepcopy(example.ret_dict)
+        del sys.modules[example]
 
 output = ''
 for back in backend:
-    output += "{backend:<15}\n".format(backend=back)
-    output += "{describe:<15}".format(describe='exampe/metric')
+    output += "{backend:<20}\n".format(backend=back)
+    output += "{describe:<20}".format(describe='exampe/metric')
     for metric in metrics:
-        output += "{metric:<15}".format(metric=metric)
+        output += "{metric:<25}".format(metric=metric)
     output += '\n'
     for module in module_name:
-        output += "{module:<15}".format(module=module)
+        output += "{module:<20}".format(module=module)
         for metric in metrics:
-            output += "{metric:<15}".format(metric=result[back][module][metric])
+            output += "{metric:<25}".format(metric=result[back][module][metric])
         output += '\n'
     output += '\n'
 
