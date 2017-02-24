@@ -220,5 +220,5 @@ with profiler.Timer(ret_dict):
     ret_dict["training_memory"] = memory_usage(proc=(train_model, ()), max_usage=True)
 ret_dict["training_accuracy"] = model.evaluate([X, Xq], Y, batch_size=BATCH_SIZE)[1]
 loss, acc = model.evaluate([tX, tXq], tY, batch_size=BATCH_SIZE)
-ret_dict["test_accuracy"] = acc[1]
+ret_dict["test_accuracy"] = acc
 print('Test loss / test accuracy = {:.4f} / {:.4f}'.format(loss, acc))
