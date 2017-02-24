@@ -72,7 +72,7 @@ from keras.models import Sequential
 from keras.preprocessing.sequence import pad_sequences
 
 from memory_profiler import memory_usage
-from .. import profiler
+import profiler
 
 
 def tokenize(sent):

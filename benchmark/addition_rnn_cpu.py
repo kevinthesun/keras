@@ -34,7 +34,7 @@ import numpy as np
 from six.moves import range
 
 from memory_profiler import memory_usage
-from .. import profiler
+import profiler
 
 
 class CharacterTable(object):

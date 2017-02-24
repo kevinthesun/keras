@@ -33,7 +33,7 @@ from keras.layers import LSTM
 from keras.utils import np_utils
 
 from memory_profiler import memory_usage
-from .. import profiler
+import profiler
 
 # Training parameters.
 batch_size = 32
