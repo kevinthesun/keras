@@ -3,6 +3,7 @@ import time
 class Timer(object):
     def __init__(self, ret_dict):
         self.__start = time.time()
+        self.__ret_dict = ret_dict
 
     def __enter__(self):
         return self
@@ -10,4 +11,4 @@ class Timer(object):
     def __exit__(self, exc_type, exc_val, exc_tb):
         end = time.time()
         runtime = end - self.__start
-        ret_dict["training_time"] = runtime
+        self.__ret_dict["training_time"] = runtime
