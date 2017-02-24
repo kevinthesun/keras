@@ -7,7 +7,7 @@ metrics = ["training_time", "training_memory", "training_accuracy", "test_accura
 module_name = ["babi_rnn_cpu"]
 result = dict()
 test_summary = open('test_summary.txt', 'w')
-keras_set = os.path.abspath('~/.keras/keras.json')
+keras_set = os.path.expanduser("~") + '/.keras/keras.json'
 
 
 for back in backend:
