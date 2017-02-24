@@ -199,6 +199,7 @@ for iteration in range(1, 200):
     ret_dict["training_memory"] = str(ret_dict["training_memory"]) + ' MB'
     total_time += ret_dict["training_time"]
     ret_dict["training_time"] = total_time
+    ret_dict["training_time"] = str(ret_dict["training_time"]) + ' sec'
         
     # Select 10 samples from the validation set at random so we can visualize
     # errors.

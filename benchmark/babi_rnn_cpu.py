@@ -218,6 +218,7 @@ def train_model():
 
 with profiler.Timer(ret_dict):
     ret_dict["training_memory"] = str(memory_usage(proc=(train_model, ()), max_usage=True)[0]) + ' MB'
+ret_dict["training_time"] = str(ret_dict["training_time"]) + ' sec'
 ret_dict["training_accuracy"] = model.evaluate([X, Xq], Y, batch_size=BATCH_SIZE)[1]
 loss, acc = model.evaluate([tX, tXq], tY, batch_size=BATCH_SIZE)
 ret_dict["test_accuracy"] = acc
