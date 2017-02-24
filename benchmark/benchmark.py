@@ -1,20 +1,22 @@
 import json
 import copy
+import os
 
 backend = ["mxnet", "tensorflow", "theano"]
 metrics = ["training_time", "training_memory", "training_accuracy", "test_accuracy"]
 module_name = ["babi_rnn_cpu"]
 result = dict()
 test_summary = open('test_summary.txt', 'w')
+keras_set = os.path.abspath('~/.keras/keras.json')
 
 
 for back in backend:
-    keras_set_js = json.load(open(~/.keras/keras.json))
-    with open('~/.keras/keras.json', 'r') as f:
+    keras_set_js = json.load(open(keras_set))
+    with open(keras_set, 'r') as f:
         keras_set_js = json.load(f)
         keras_set_js['backend'] = back
 
-    with open('~/.keras/keras.json', 'w') as f
+    with open(keras_set, 'w') as f:
         f.write(json.dumps(keras_set_js))
 
     result[back] = dict()
