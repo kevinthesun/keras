@@ -81,7 +81,8 @@ model.compile(loss='categorical_crossentropy',
               metrics=['accuracy'])
 
 #Result dictionary
-global ret_dict = {}
+global ret_dict
+ret_dict = dict()
 
 # Training.
 def train_model():

@@ -179,7 +179,8 @@ model.compile(loss='categorical_crossentropy',
 model.summary()
 
 #Result dictionary
-global ret_dict = {}
+global ret_dict
+ret_dict = dict()
 
 # Train the model each generation and show predictions against the validation
 # dataset.

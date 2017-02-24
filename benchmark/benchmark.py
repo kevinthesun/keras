@@ -1,6 +1,7 @@
+import os
 import json
 import copy
-import os
+import importlib
 
 backend = ["mxnet", "tensorflow", "theano"]
 metrics = ["training_time", "training_memory", "training_accuracy", "test_accuracy"]
@@ -21,7 +22,7 @@ for back in backend:
 
     result[back] = dict()
     for module in module_name:
-        import module
+        importlib.import_module(module)
         result[back][module] = copy.deepcopy(module.ret_dict)
 
 output = ''
