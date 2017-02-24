@@ -22,8 +22,8 @@ for back in backend:
 
     result[back] = dict()
     for module in module_name:
-        importlib.import_module(module)
-        result[back][module] = copy.deepcopy(module.ret_dict)
+        example = importlib.import_module(module)
+        result[back][module] = copy.deepcopy(example.ret_dict)
 
 output = ''
 for back in backend:
