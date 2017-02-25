@@ -3,22 +3,22 @@ import sys
 import copy
 import importlib
 
-backend = ["mxnet", "tensorflow", "theano"]
+backend = ["mxnet", "tensorflow"]
 metrics = ["training_time", "training_memory", "training_accuracy", "test_accuracy"]
-module_name = ["mnist_hierarchical_rnn_cpu", "addition_rnn_cpu", "babi_rnn_cpu"]
+module_name = ["babi_rnn_cpu"]
 result = dict()
 test_summary = open('test_summary.txt', 'w')
-keras_set = os.path.expanduser("~") + '/.keras/keras.json'
 
 
 for back in backend:
     os.environ['KERAS_BACKEND'] = back
+    import keras
+    reload('keras')
     result[back] = dict()
     for module in module_name:
         example = importlib.import_module(module)
         result[back][module] = copy.deepcopy(example.ret_dict)
         del sys.modules[module]
-    del sys.modules['keras']
 
 output = ''
 for back in backend:
