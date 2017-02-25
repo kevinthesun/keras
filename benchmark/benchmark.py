@@ -5,7 +5,7 @@ import importlib
 
 backend = ["mxnet", "tensorflow", "theano"]
 metrics = ["training_time", "training_memory", "training_accuracy", "test_accuracy"]
-module_name = ["babi_rnn_cpu"]
+module_name = ["mnist_hierarchical_rnn_cpu", "addition_rnn_cpu", "babi_rnn_cpu"]
 result = dict()
 test_summary = open('test_summary.txt', 'w')
 keras_set = os.path.expanduser("~") + '/.keras/keras.json'
