@@ -1,6 +1,5 @@
 import os
 import sys
-import json
 import copy
 import importlib
 
@@ -13,14 +12,7 @@ keras_set = os.path.expanduser("~") + '/.keras/keras.json'
 
 
 for back in backend:
-    keras_set_js = json.load(open(keras_set))
-    with open(keras_set, 'r') as f:
-        keras_set_js = json.load(f)
-        keras_set_js['backend'] = back
-
-    with open(keras_set, 'w') as f:
-        f.write(json.dumps(keras_set_js))
-
+    os.environ['KERAS_BACKEND'] = back
     result[back] = dict()
     for module in module_name:
         example = importlib.import_module(module)
