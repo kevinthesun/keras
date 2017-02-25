@@ -18,6 +18,7 @@ for back in backend:
         example = importlib.import_module(module)
         result[back][module] = copy.deepcopy(example.ret_dict)
         del sys.modules[module]
+    del sys.modules['keras']
 
 output = ''
 for back in backend:
