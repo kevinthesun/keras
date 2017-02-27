@@ -196,7 +196,6 @@ for iteration in range(1, 200):
     with profiler.Timer(ret_dict):
         ret_dict["training_memory"] = max(memory_usage(proc=(train_model, ()), max_usage=True)[0],
                                           ret_dict["training_memory"])
-    ret_dict["training_memory"] = str(ret_dict["training_memory"]) + ' MB'
     total_time += ret_dict["training_time"]
     ret_dict["training_time"] = total_time
     ret_dict["training_time"] = str(ret_dict["training_time"]) + ' sec'
@@ -218,6 +217,7 @@ for iteration in range(1, 200):
             print(colors.fail + '☒' + colors.close, end=" ")
         print(guess)
         print('---')
-
+        
+ret_dict["training_memory"] = str(ret_dict["training_memory"]) + ' MB'
 ret_dict["training_accuracy"] = model.evaluate(X_train, y_train, verbose=0)[1]
 ret_dict["test_accuracy"] = model.evaluate(X_val, y_val, verbose=0)[1]

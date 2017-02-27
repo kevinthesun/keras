@@ -3,7 +3,7 @@ import sys
 import copy
 import importlib
 
-backend = ["mxnet", "tensorflow", "theano"]
+backend = ["tensorflow", "theano", "mxnet"]
 metrics = ["training_time", "training_memory", "training_accuracy", "test_accuracy"]
 module_name = ["addition_rnn_cpu", "babi_rnn_cpu", "mnist_hierarchical_rnn_cpu"]
 result = dict()
