@@ -14,6 +14,10 @@ for back in backend:
     os.environ['KERAS_BACKEND'] = back
     import keras
     reload(keras.backend)
+    if back == "theano" or back == "mxnet":
+        keras.backend.set_image_dim_ordering('th')
+    else:
+        keras.backend.set_image_dim_ordering('tf')
     result[back] = dict()
     for module in module_name:
         example = importlib.import_module(module)
