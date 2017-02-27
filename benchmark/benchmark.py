@@ -22,12 +22,12 @@ for back in backend:
 
     output = ''
     output += "{backend:<20}\n".format(backend=back)
-    output += "{describe:<20}".format(describe='exampe/metric')
+    output += "{describe:<40}".format(describe='exampe/metric')
     for metric in metrics:
         output += "{metric:<25}".format(metric=metric)
     output += '\n'
     for module in module_name:
-        output += "{module:<20}".format(module=module)
+        output += "{module:<40}".format(module=module)
         for metric in metrics:
             output += "{metric:<25}".format(metric=result[back][module][metric])
         output += '\n'
