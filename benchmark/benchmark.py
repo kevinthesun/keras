@@ -4,7 +4,7 @@ import copy
 import importlib
 
 backend = ["tensorflow", "theano", "mxnet"]
-metrics = ["training_time", "training_memory", "training_accuracy", "test_accuracy"]
+metrics = ["training_time", "max_memory", "memory_variance", "training_accuracy", "test_accuracy"]
 module_name = ["addition_rnn_cpu", "babi_rnn_cpu", "mnist_hierarchical_rnn_cpu"]
 result = dict()
 test_summary = open('test_summary.txt', 'w')
