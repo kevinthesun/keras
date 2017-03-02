@@ -33,6 +33,7 @@ from keras.layers import LSTM
 from keras.utils import np_utils
 
 import profiler
+import subprocess
 
 # Training parameters.
 batch_size = 32
@@ -83,13 +84,17 @@ model.compile(loss='categorical_crossentropy',
 global ret_dict
 ret_dict = dict()
 
+GPU_MONITOR = "nvidia-smi --query-gpu=index,memory.used --format=csv -lms 500 -f output.csv"
+
 # Training.
-def train_model():
+gpu_monitor_process = subprocess.Popen(GPU_MONITOR, shell=True)
+with profiler.Timer(ret_dict):
     model.fit(X_train, Y_train, batch_size=batch_size, nb_epoch=nb_epochs,
               verbose=1, validation_data=(X_test, Y_test))
 
-with profiler.Timer(ret_dict):
-    ret_dict["training_memory"] = str(memory_usage(proc=(train_model, ()), max_usage=True)[0]) + ' MB'
+gpu_monitor_process.kill()
+profiler.mem_extract('output.csv', ret_dict)
+
 ret_dict["training_time"] = str(ret_dict["training_time"]) + ' sec'
 
 ret_dict["training_accuracy"] = model.evaluate(X_train, Y_train, verbose=0)[1]
