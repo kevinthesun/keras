@@ -32,7 +32,6 @@ from keras.layers import Input, Dense, TimeDistributed
 from keras.layers import LSTM
 from keras.utils import np_utils
 
-from memory_profiler import memory_usage
 import profiler
 
 # Training parameters.
