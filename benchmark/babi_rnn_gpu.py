@@ -71,7 +71,7 @@ from keras.layers import recurrent
 from keras.models import Sequential
 from keras.preprocessing.sequence import pad_sequences
 
-from memory_profiler import memory_usage
+import subprocess
 import profiler
 
 
@@ -153,7 +153,7 @@ print('RNN / Embed / Sent / Query = {}, {}, {}, {}'.format(RNN, EMBED_HIDDEN_SIZ
 global ret_dict
 ret_dict = dict()
 
-GPU_MONITOR = "nvidia-smi --query-gpu=index, memory.used --format=csv -lms 500 -f output.csv"
+GPU_MONITOR = "nvidia-smi --query-gpu=index,memory.used --format=csv -lms 500 -f output.csv"
 
 try:
     path = get_file('babi-tasks-v1-2.tar.gz', origin='https://s3.amazonaws.com/text-datasets/babi_tasks_1-20_v1-2.tar.gz')
