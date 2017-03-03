@@ -1,7 +1,9 @@
 import os
 import time
 import csv
+import subprocess
 
+GPU_MONITOR = "nvidia-smi --query-gpu=index,memory.used --format=csv -lms 500 -f output.csv"
 GPU_NUM = 8
 
 def mem_extract(file_name, ret_dict):
@@ -13,7 +15,7 @@ def mem_extract(file_name, ret_dict):
             if row_count == 0:
                 row_count += 1
                 continue
-            if not 'MiB' in row[1]:
+            if len(row) < 2 or not 'MiB' in row[1]:
                 last_line_broken = True
             row_count += 1
         row_count -= 1
@@ -43,7 +45,7 @@ def mem_extract(file_name, ret_dict):
             if row_num > row_count:
                 break
         row_num -= 1
-        ret_dict['max_memory'] = max_usage
+        ret_dict['max_memory'] = str(max_usage) + "MB"
         avg_mem = 0
         var_mem = 0
         for num in mem_recoder:
@@ -55,15 +57,18 @@ def mem_extract(file_name, ret_dict):
         ret_dict["memory_variance"] = var_mem
     os.remove(file_name)
             
-class Timer(object):
+class Profiler(object):
     def __init__(self, ret_dict):
         self.__start = time.time()
         self.__ret_dict = ret_dict
 
     def __enter__(self):
+        self.__gpu_monitor_process = subprocess.Popen(GPU_MONITOR, shell=True)
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         end = time.time()
         runtime = end - self.__start
         self.__ret_dict["training_time"] = runtime
+        self.__gpu_monitor_process.kill()
+        profiler.mem_extract('output.csv', self.__ret_dict)

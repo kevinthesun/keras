@@ -71,7 +71,6 @@ from keras.layers import recurrent
 from keras.models import Sequential
 from keras.preprocessing.sequence import pad_sequences
 
-import subprocess
 import profiler
 
 
@@ -153,8 +152,6 @@ print('RNN / Embed / Sent / Query = {}, {}, {}, {}'.format(RNN, EMBED_HIDDEN_SIZ
 global ret_dict
 ret_dict = dict()
 
-GPU_MONITOR = "nvidia-smi --query-gpu=index,memory.used --format=csv -lms 500 -f output.csv"
-
 try:
     path = get_file('babi-tasks-v1-2.tar.gz', origin='https://s3.amazonaws.com/text-datasets/babi_tasks_1-20_v1-2.tar.gz')
 except:
@@ -216,11 +213,8 @@ model.compile(optimizer='adam',
                                              'gpu(3)', 'gpu(4)', 'gpu(5)', 'gpu(6)', 'gpu(7)'])
 
 print('Training')
-gpu_monitor_process = subprocess.Popen(GPU_MONITOR, shell=True)
-with profiler.Timer(ret_dict):
+with profiler.Profiler(ret_dict):
     model.fit([X, Xq], Y, batch_size=BATCH_SIZE, nb_epoch=EPOCHS, validation_split=0.05)
-gpu_monitor_process.kill()
-profiler.mem_extract('output.csv', ret_dict)
 
 ret_dict["training_time"] = str(ret_dict["training_time"]) + ' sec'
 ret_dict["training_accuracy"] = model.evaluate([X, Xq], Y, batch_size=BATCH_SIZE)[1]
