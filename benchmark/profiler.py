@@ -2,14 +2,13 @@ import os
 import time
 import csv
 import subprocess
-import codecs
 
 GPU_MONITOR = "nvidia-smi --query-gpu=index,memory.used --format=csv -lms 500 -f output.csv"
 GPU_NUM = 8
 
 def mem_extract(file_name, ret_dict):
     row_count = 0
-    with codecs.open(file_name, 'rU', 'utf-16') as csv_file:
+    with open(file_name, 'r') as csv_file:
         csv_reader = csv.reader(csv_file)
         last_line_broken = False
         for row in csv_reader:
@@ -25,7 +24,7 @@ def mem_extract(file_name, ret_dict):
         else:
             row_count -= row_count % GPU_NUM
 
-    with codecs.open(file_name, 'rU', 'utf-16') as csv_file:
+    with open(file_name, 'r') as csv_file:
         csv_reader = csv.reader(csv_file)
         max_usage = 0
         current_usage = 0
