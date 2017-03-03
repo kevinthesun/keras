@@ -212,7 +212,8 @@ model.add(Dense(vocab_size, activation='softmax'))
 
 model.compile(optimizer='adam',
               loss='categorical_crossentropy',
-              metrics=['accuracy'])
+              metrics=['accuracy'], context=['gpu(0)', 'gpu(1)', 'gpu(2)',
+                                             'gpu(3)', 'gpu(4)', 'gpu(5)', 'gpu(6)', 'gpu(7)'])
 
 print('Training')
 gpu_monitor_process = subprocess.Popen(GPU_MONITOR, shell=True)
