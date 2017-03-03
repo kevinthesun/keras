@@ -71,4 +71,4 @@ class Profiler(object):
         runtime = end - self.__start
         self.__ret_dict["training_time"] = runtime
         self.__gpu_monitor_process.kill()
-        profiler.mem_extract('output.csv', self.__ret_dict)
+        mem_extract('output.csv', self.__ret_dict)
