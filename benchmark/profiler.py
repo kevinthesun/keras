@@ -2,9 +2,10 @@ import os
 import time
 import csv
 import subprocess
+import multi_gpu
 
 GPU_MONITOR = "nvidia-smi --query-gpu=index,memory.used --format=csv -lms 500 -f output.csv"
-GPU_NUM = 8
+GPU_NUM = multi_gpu.GPU_NUM
 
 def mem_extract(file_name, ret_dict):
     row_count = 0

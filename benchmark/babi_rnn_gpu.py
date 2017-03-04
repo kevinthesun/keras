@@ -72,6 +72,7 @@ from keras.models import Sequential
 from keras.preprocessing.sequence import pad_sequences
 
 import profiler
+import multi_gpu
 
 
 def tokenize(sent):
@@ -207,10 +208,8 @@ model.add(RNN(EMBED_HIDDEN_SIZE, return_sequences=False))
 model.add(Dropout(0.3))
 model.add(Dense(vocab_size, activation='softmax'))
 
-model.compile(optimizer='adam',
-              loss='categorical_crossentropy',
-              metrics=['accuracy'], context=['gpu(0)', 'gpu(1)', 'gpu(2)',
-                                             'gpu(3)', 'gpu(4)', 'gpu(5)', 'gpu(6)', 'gpu(7)'])
+multi_gpu,make_model(model, optimizer='adam', loss='categorical_crossentropy',
+                     metrics=['accuracy'])
 
 print('Training')
 with profiler.Profiler(ret_dict):
