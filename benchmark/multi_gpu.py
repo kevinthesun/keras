@@ -5,7 +5,8 @@ from keras.models import Model
 from keras.layers import Input, merge
 from keras.layers.core import Lambda
 
-global GPU_NUM = 8
+global GPU_NUM
+GPU_NUM = 8
 
 def slice_batch(x, n_gpus, part):
     sh = K.shape(x)
@@ -39,6 +40,7 @@ def make_model(model, **kwargs):
     if backend == 'tensorflow':
         model = (model, GPU_NUM)
     if backend == 'mxnet':
-        model.compile(**kwargs, context=gpu_list)
+        kwargs['context'] = gpu_list
+        model.compile(**kwargs)
     else:
         model.compile(**kwargs)
