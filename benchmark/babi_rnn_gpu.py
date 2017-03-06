@@ -208,7 +208,7 @@ model.add(RNN(EMBED_HIDDEN_SIZE, return_sequences=False))
 model.add(Dropout(0.3))
 model.add(Dense(vocab_size, activation='softmax'))
 
-multi_gpu,make_model(model, optimizer='adam', loss='categorical_crossentropy',
+model = multi_gpu.make_model(model, optimizer='adam', loss='categorical_crossentropy',
                      metrics=['accuracy'])
 
 print('Training')
