@@ -33,8 +33,8 @@ from keras.layers import Activation, TimeDistributed, Dense, RepeatVector, recur
 import numpy as np
 from six.moves import range
 
-from memory_profiler import memory_usage
 import profiler
+import multi_gpu
 
 
 class CharacterTable(object):
@@ -173,9 +173,8 @@ for _ in range(LAYERS):
 # of the output sequence, decide which character should be chosen.
 model.add(TimeDistributed(Dense(len(chars))))
 model.add(Activation('softmax'))
-model.compile(loss='categorical_crossentropy',
-              optimizer='adam',
-              metrics=['accuracy'])
+model = multi_gpu.make_model(model, optimizer='adam', loss='categorical_crossentropy',
+                     metrics=['accuracy'])
 model.summary()
 
 #Result dictionary
@@ -185,20 +184,16 @@ ret_dict = dict()
 # Train the model each generation and show predictions against the validation
 # dataset.
 total_time = 0
-ret_dict["training_memory"] = 0
+current_max_mem = 0
 for iteration in range(1, 200):
     print()
     print('-' * 50)
     print('Iteration', iteration)
-    def train_model():
+    with profiler.Timer(ret_dict):
         model.fit(X_train, y_train, batch_size=BATCH_SIZE, nb_epoch=1,
                   validation_data=(X_val, y_val))
-    with profiler.Timer(ret_dict):
-        ret_dict["training_memory"] = max(memory_usage(proc=(train_model, ()), max_usage=True)[0],
-                                          ret_dict["training_memory"])
+    current_max_mem = max(current_max_mem, float(ret_dict["max_memory"][:-3]))
     total_time += ret_dict["training_time"]
-    ret_dict["training_time"] = total_time
-    ret_dict["training_time"] = str(ret_dict["training_time"]) + ' sec'
         
     # Select 10 samples from the validation set at random so we can visualize
     # errors.
@@ -217,7 +212,8 @@ for iteration in range(1, 200):
             print(colors.fail + '☒' + colors.close, end=" ")
         print(guess)
         print('---')
-        
-ret_dict["training_memory"] = str(ret_dict["training_memory"]) + ' MB'
+
+ret_dict["training_time"] = str(total_time) + ' sec'
+ret_dict["training_memory"] = str(current_max_mem) + ' MB'
 ret_dict["training_accuracy"] = model.evaluate(X_train, y_train, verbose=0)[1]
 ret_dict["test_accuracy"] = model.evaluate(X_val, y_val, verbose=0)[1]

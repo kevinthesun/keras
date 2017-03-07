@@ -46,7 +46,7 @@ def mem_extract(file_name, ret_dict):
             if row_num > row_count:
                 break
         row_num -= 1
-        ret_dict['max_memory'] = str(max_usage) + "MB"
+        ret_dict['max_memory'] = str(max_usage) + " MB"
         avg_mem = 0
         var_mem = 0
         for num in mem_recoder:
