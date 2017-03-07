@@ -189,7 +189,7 @@ for iteration in range(1, 200):
     print()
     print('-' * 50)
     print('Iteration', iteration)
-    with profiler.Timer(ret_dict):
+    with profiler.Profiler(ret_dict):
         model.fit(X_train, y_train, batch_size=BATCH_SIZE, nb_epoch=1,
                   validation_data=(X_val, y_val))
     current_max_mem = max(current_max_mem, float(ret_dict["max_memory"][:-3]))

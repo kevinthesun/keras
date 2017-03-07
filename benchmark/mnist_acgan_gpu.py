@@ -144,9 +144,17 @@ if True:
 
     # build the discriminator
     discriminator = build_discriminator()
+    discriminator = multi_gpu.make_model(discriminator,
+        optimizer=Adam(lr=adam_lr, beta_1=adam_beta_1),
+        loss=['binary_crossentropy', 'sparse_categorical_crossentropy']
+    )
 
     # build the generator
     generator = build_generator(latent_size)
+    generator = multi_gpu.make_model(generator,
+        optimizer=Adam(lr=adam_lr, beta_1=adam_beta_1),
+        loss='binary_crossentropy'
+    )
 
     latent = Input(shape=(latent_size, ))
     image_class = Input(shape=(1,), dtype='int32')
@@ -158,14 +166,6 @@ if True:
     discriminator.trainable = False
     fake, aux = discriminator(fake)
     combined = Model(input=[latent, image_class], output=[fake, aux])
-    discriminator = multi_gpu.make_model(discriminator,
-        optimizer=Adam(lr=adam_lr, beta_1=adam_beta_1),
-        loss=['binary_crossentropy', 'sparse_categorical_crossentropy']
-    )
-    generator = multi_gpu.make_model(generator,
-        optimizer=Adam(lr=adam_lr, beta_1=adam_beta_1),
-        loss='binary_crossentropy'
-    )
     combined = multi_gpu.make_model(combined,
         optimizer=Adam(lr=adam_lr, beta_1=adam_beta_1),
         loss=['binary_crossentropy', 'sparse_categorical_crossentropy']
@@ -189,7 +189,7 @@ if True:
     current_max_mem = 0
     
     for epoch in range(nb_epochs):
-        with profiler.Timer(ret_dict):
+        with profiler.Profiler(ret_dict):
             print('Epoch {} of {}'.format(epoch + 1, nb_epochs))
 
             nb_batches = int(X_train.shape[0] / batch_size)

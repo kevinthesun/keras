@@ -22,7 +22,7 @@ def to_multi_gpu(model, n_gpus=2):
     x = [Input(shape[1:]) for shape in model.input_shape] if multi_input else Input(model.input_shape[1:])
     towers = []
     outputs = []
-    for i in range(len(model.outputs)):
+    for _ in range(len(model.outputs)):
         outputs.append([])
     for g in range(n_gpus):
         with tf.device('/gpu:' + str(g)):
@@ -31,7 +31,7 @@ def to_multi_gpu(model, n_gpus=2):
                       else Lambda(slice_batch, lambda shape: shape, arguments={'n_gpus':n_gpus, 'part':g})(x)
             output_model = model(slice_g)
             if multi_output:
-                for num in range(len(output_model):
+                for num in range(len(output_model)):
                     outputs[num].append(output_model[num])
             else:
                  towers.append(output_model)

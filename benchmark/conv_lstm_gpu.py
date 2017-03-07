@@ -9,6 +9,13 @@ from keras.layers.normalization import BatchNormalization
 import numpy as np
 import pylab as plt
 
+import profiler
+import multi_gpu
+
+#Result dictionary
+global ret_dict
+ret_dict = dict()
+
 # We create a layer which take as input movies of shape
 # (n_frames, width, height, channels) and returns a movie
 # of identical shape.
@@ -35,7 +42,7 @@ seq.add(Convolution3D(nb_filter=1, kernel_dim1=1, kernel_dim2=3,
                       kernel_dim3=3, activation='sigmoid',
                       border_mode='same', dim_ordering='tf'))
 
-seq.compile(loss='binary_crossentropy', optimizer='adadelta')
+seq = multi_gpu.make_model(seq, loss='binary_crossentropy', optimizer='adadelta')
 
 
 # Artificial data generation:
@@ -100,8 +107,9 @@ def generate_movies(n_samples=1200, n_frames=15):
 
 # Train the network
 noisy_movies, shifted_movies = generate_movies(n_samples=1200)
-seq.fit(noisy_movies[:1000], shifted_movies[:1000], batch_size=10,
-        nb_epoch=300, validation_split=0.05)
+with profiler.Profiler(ret_dict):
+    seq.fit(noisy_movies[:1000], shifted_movies[:1000], batch_size=10,
+            nb_epoch=300, validation_split=0.05)
 
 # Testing the network on one movie
 # feed it with the first 7 positions and then
