@@ -3,22 +3,15 @@ import sys
 import copy
 import importlib
 
-backend = ["tensorflow", "theano", "mxnet"]
+back = os.environ['KERAS_BACKEND'] 
 metrics = ["training_time", "max_memory", "memory_variance", "training_accuracy", "test_accuracy"]
-module_name = ["mnist_acgan_gpu", "addition_rnn_gpu", "babi_rnn_gpu"]
+module_name = ["mnist_hierarchical_rnn_gpu", "addition_rnn_gpu", "babi_rnn_gpu"]
 result = dict()
-test_summary = open('test_summary.txt', 'w')
 
 
-for back in backend:
-    os.environ['KERAS_BACKEND'] = back
-    import keras
-    reload(keras.backend)
-    if back == "theano" or back == "mxnet":
-        keras.backend.set_image_dim_ordering('th')
-    else:
-        keras.backend.set_image_dim_ordering('tf')
+def run_benchmark():
     result[back] = dict()
+    test_summary = open('test_summary_' + str(back) + '.txt', 'w')
     for module in module_name:
         example = importlib.import_module(module)
         result[back][module] = copy.deepcopy(example.ret_dict)
@@ -37,4 +30,8 @@ for back in backend:
         output += '\n'
     output += '\n'
     test_summary.write(output)
+    test_summary.close()
     print output
+
+if __name__ == '__main__':
+    run_benchmark()

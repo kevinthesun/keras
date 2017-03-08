@@ -183,37 +183,32 @@ ret_dict = dict()
 
 # Train the model each generation and show predictions against the validation
 # dataset.
-total_time = 0
-current_max_mem = 0
-for iteration in range(1, 200):
-    print()
-    print('-' * 50)
-    print('Iteration', iteration)
-    with profiler.Profiler(ret_dict):
+with profiler.Profiler(ret_dict):
+    for iteration in range(1, 200):
+        print()
+        print('-' * 50)
+        print('Iteration', iteration)
         model.fit(X_train, y_train, batch_size=BATCH_SIZE, nb_epoch=1,
                   validation_data=(X_val, y_val))
-    current_max_mem = max(current_max_mem, float(ret_dict["max_memory"][:-3]))
-    total_time += ret_dict["training_time"]
         
-    # Select 10 samples from the validation set at random so we can visualize
-    # errors.
-    for i in range(10):
-        ind = np.random.randint(0, len(X_val))
-        rowX, rowy = X_val[np.array([ind])], y_val[np.array([ind])]
-        preds = model.predict_classes(rowX, verbose=0)
-        q = ctable.decode(rowX[0])
-        correct = ctable.decode(rowy[0])
-        guess = ctable.decode(preds[0], calc_argmax=False)
-        print('Q', q[::-1] if INVERT else q)
-        print('T', correct)
-        if correct == guess:
-            print(colors.ok + '☑' + colors.close, end=" ")
-        else:
-            print(colors.fail + '☒' + colors.close, end=" ")
-        print(guess)
-        print('---')
+        # Select 10 samples from the validation set at random so we can visualize
+        # errors.
+        for i in range(10):
+            ind = np.random.randint(0, len(X_val))
+            rowX, rowy = X_val[np.array([ind])], y_val[np.array([ind])]
+            preds = model.predict_classes(rowX, verbose=0)
+            q = ctable.decode(rowX[0])
+            correct = ctable.decode(rowy[0])
+            guess = ctable.decode(preds[0], calc_argmax=False)
+            print('Q', q[::-1] if INVERT else q)
+            print('T', correct)
+            if correct == guess:
+                print(colors.ok + '☑' + colors.close, end=" ")
+            else:
+                print(colors.fail + '☒' + colors.close, end=" ")
+            print(guess)
+            print('---')
 
-ret_dict["training_time"] = str(total_time) + ' sec'
-ret_dict["training_memory"] = str(current_max_mem) + ' MB'
+ret_dict["training_time"] = str(ret_dict["training_time"]) + ' sec'
 ret_dict["training_accuracy"] = model.evaluate(X_train, y_train, verbose=0)[1]
 ret_dict["test_accuracy"] = model.evaluate(X_val, y_val, verbose=0)[1]

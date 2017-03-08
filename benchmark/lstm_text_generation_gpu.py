@@ -20,6 +20,13 @@ import numpy as np
 import random
 import sys
 
+import profiler
+import multi_gpu
+
+#Result dictionary
+global ret_dict
+ret_dict = dict()
+
 path = get_file('nietzsche.txt', origin="https://s3.amazonaws.com/text-datasets/nietzsche.txt")
 text = open(path).read().lower()
 print('corpus length:', len(text))
@@ -56,7 +63,7 @@ model.add(Dense(len(chars)))
 model.add(Activation('softmax'))
 
 optimizer = RMSprop(lr=0.01)
-model.compile(loss='categorical_crossentropy', optimizer=optimizer)
+model = multi_gpu.make_model(model, loss='categorical_crossentropy', optimizer=optimizer)
 
 
 def sample(preds, temperature=1.0):
@@ -69,11 +76,16 @@ def sample(preds, temperature=1.0):
     return np.argmax(probas)
 
 # train the model, output generated text after each iteration
+total_time = 0
+current_max_mem = 0
 for iteration in range(1, 60):
     print()
     print('-' * 50)
     print('Iteration', iteration)
-    model.fit(X, y, batch_size=128, nb_epoch=1)
+    with profiler.Profiler(ret_dict):
+        model.fit(X, y, batch_size=128, nb_epoch=1)
+    total_time += ret_dict["training_time"]
+    current_max_mem = max(current_max_mem, float(ret_dict["max_memory"][:-3]))
 
     start_index = random.randint(0, len(text) - maxlen - 1)
 
@@ -102,3 +114,5 @@ for iteration in range(1, 60):
             sys.stdout.write(next_char)
             sys.stdout.flush()
         print()
+ret_dict["training_time"] = str(total_time) + ' sec'
+ret_dict["training_memory"] = str(current_max_mem) + ' MB'

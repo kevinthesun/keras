@@ -25,6 +25,13 @@ from keras.models import Sequential
 from keras.layers import Embedding, Dense, LSTM
 from keras.datasets import imdb
 
+import profiler
+import multi_gpu
+
+#Result dictionary
+global ret_dict
+ret_dict = dict()
+
 max_features = 20000
 max_length = 80
 embedding_dim = 256

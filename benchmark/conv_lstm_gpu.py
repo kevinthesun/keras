@@ -110,10 +110,18 @@ noisy_movies, shifted_movies = generate_movies(n_samples=1200)
 with profiler.Profiler(ret_dict):
     seq.fit(noisy_movies[:1000], shifted_movies[:1000], batch_size=10,
             nb_epoch=300, validation_split=0.05)
+    
+ret_dict["training_time"] = str(ret_dict["training_time"]) + ' sec'
+ret_dict["training_accuracy"] = seq.evaluate(noisy_movies[:1000],
+                                             shifted_movies[:1000] verbose=0)[1]
 
 # Testing the network on one movie
 # feed it with the first 7 positions and then
 # predict the new positions
+noisy_movies1, shifted_movies1 = generate_movies(n_samples=1200)
+ret_dict["test_accuracy"] = seq.evaluate(noisy_movies1[:1000],
+                                         shifted_movies1[:1000] verbose=0)[1]
+
 which = 1004
 track = noisy_movies[which][:7, ::, ::, ::]
 

@@ -20,6 +20,13 @@ from keras.layers import Dense, Activation, Embedding
 from keras.layers import LSTM
 from keras.datasets import imdb
 
+import profiler
+import multi_gpu
+
+#Result dictionary
+global ret_dict
+ret_dict = dict()
+
 max_features = 20000
 maxlen = 80  # cut texts after this number of words (among top max_features most common words)
 batch_size = 32
@@ -43,14 +50,20 @@ model.add(Dense(1))
 model.add(Activation('sigmoid'))
 
 # try using different optimizers and different optimizer configs
-model.compile(loss='binary_crossentropy',
-              optimizer='adam',
-              metrics=['accuracy'])
+model = multi_gpu.make_model(model, loss='binary_crossentropy',
+                                                optimizer='adam',
+                                                metrics=['accuracy'])
 
 print('Train...')
-model.fit(X_train, y_train, batch_size=batch_size, nb_epoch=15,
-          validation_data=(X_test, y_test))
+with profiler.Profiler(ret_dict):
+    model.fit(X_train, y_train, batch_size=batch_size, nb_epoch=15,
+              validation_data=(X_test, y_test))
+
+ret_dict["training_time"] = str(ret_dict["training_time"]) + ' sec'
+ret_dict["training_accuracy"] = model.evaluate(X_train, y_train, verbose=0)[1]
+
 score, acc = model.evaluate(X_test, y_test,
                             batch_size=batch_size)
+ret_dict["testing_accuracy"] = acc
 print('Test score:', score)
 print('Test accuracy:', acc)

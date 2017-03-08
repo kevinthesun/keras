@@ -1,4 +1,5 @@
 import os
+import signal
 import time
 import csv
 import subprocess
@@ -64,12 +65,14 @@ class Profiler(object):
         self.__ret_dict = ret_dict
 
     def __enter__(self):
-        self.__gpu_monitor_process = subprocess.Popen(GPU_MONITOR, shell=True)
+        open('output.csv', 'a').close()
+        self.__gpu_monitor_process = subprocess.Popen(GPU_MONITOR,
+                                                      shell=True, preexec_fn=os.setsid)
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         end = time.time()
         runtime = end - self.__start
         self.__ret_dict["training_time"] = runtime
-        self.__gpu_monitor_process.kill()
+        os.killpg(os.getpgid(self.__gpu_monitor_process.pid), signal.SIGTERM)
         mem_extract('output.csv', self.__ret_dict)

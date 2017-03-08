@@ -13,6 +13,12 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout, Embedding, LSTM, Bidirectional
 from keras.datasets import imdb
 
+import profiler
+import multi_gpu
+
+#Result dictionary
+global ret_dict
+ret_dict = dict()
 
 max_features = 20000
 maxlen = 100  # cut texts after this number of words (among top max_features most common words)
@@ -38,10 +44,16 @@ model.add(Dropout(0.5))
 model.add(Dense(1, activation='sigmoid'))
 
 # try using different optimizers and different optimizer configs
-model.compile('adam', 'binary_crossentropy', metrics=['accuracy'])
+model = multi_gpu.make_model(model, optimizer='adam',
+                                                loss='binary_crossentropy', metrics=['accuracy'])
 
 print('Train...')
-model.fit(X_train, y_train,
-          batch_size=batch_size,
-          nb_epoch=4,
-          validation_data=[X_test, y_test])
+with profiler.Profiler(ret_dict):
+    model.fit(X_train, y_train,
+              batch_size=batch_size,
+              nb_epoch=4,
+              validation_data=[X_test, y_test])
+
+ret_dict["training_time"] = str(ret_dict["training_time"]) + ' sec'
+ret_dict["training_accuracy"] = model.evaluate(X_train, y_train, verbose=0)[1]
+ret_dict["test_accuracy"] = model.evaluate(X_test, y_test, verbose=0)[1]
