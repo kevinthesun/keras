@@ -4,7 +4,7 @@ import copy
 import importlib
 
 back = os.environ['KERAS_BACKEND']
-GPU_NUM = os.environ['GPU_NUM']
+GPU_NUM = int(os.environ['GPU_NUM'])
 metrics = ["training_time", "max_memory", "memory_variance", "training_accuracy", "test_accuracy"]
 module_name = ["mnist_acgan_gpu"]#["mnist_hierarchical_rnn_gpu", "addition_rnn_gpu", "babi_rnn_gpu"]
 result = dict()

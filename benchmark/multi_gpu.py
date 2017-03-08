@@ -46,7 +46,7 @@ def to_multi_gpu(model, n_gpus=2):
 
 
 def make_model(model, **kwargs):
-    GPU_NUM = os.environ['GPU_NUM']
+    GPU_NUM = int(os.environ['GPU_NUM'])
     backend = os.environ['KERAS_BACKEND']
     gpu_list = []
     for i in range(GPU_NUM):

@@ -5,7 +5,7 @@ import csv
 import subprocess
 
 GPU_MONITOR = "nvidia-smi --query-gpu=index,memory.used --format=csv -lms 500 -f output.csv"
-GPU_NUM = os.environ['GPU_NUM']
+GPU_NUM = int(os.environ['GPU_NUM'])
 
 def mem_extract(file_name, ret_dict):
     row_count = 0
