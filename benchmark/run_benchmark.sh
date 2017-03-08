@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-backend = "'tensorflow' 'mxnet'"
+backend="tensorflow mxnet"
 
-for back in $backend: do
+for back in $backend; do
     export KERAS_BACKEND=$back
     python benchmark.py
-dones
+done
