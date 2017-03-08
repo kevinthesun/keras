@@ -5,9 +5,6 @@ from keras.models import Model
 from keras.layers import Input, merge
 from keras.layers.core import Lambda
 
-global GPU_NUM
-GPU_NUM = os.environ['GPU_NUM']
-
 def slice_batch(x, n_gpus, part):
     sh = K.shape(x)
     L = sh[0] / n_gpus
@@ -49,6 +46,7 @@ def to_multi_gpu(model, n_gpus=2):
 
 
 def make_model(model, **kwargs):
+    GPU_NUM = os.environ['GPU_NUM']
     backend = os.environ['KERAS_BACKEND']
     gpu_list = []
     for i in range(GPU_NUM):
