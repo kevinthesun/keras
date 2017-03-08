@@ -6,7 +6,7 @@ from keras.layers import Input, merge
 from keras.layers.core import Lambda
 
 global GPU_NUM
-GPU_NUM = 8
+GPU_NUM = os.environ['GPU_NUM']
 
 def slice_batch(x, n_gpus, part):
     sh = K.shape(x)

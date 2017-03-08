@@ -3,15 +3,17 @@ import sys
 import copy
 import importlib
 
-back = os.environ['KERAS_BACKEND'] 
+back = os.environ['KERAS_BACKEND']
+GPU_NUM = os.environ['GPU_NUM']
 metrics = ["training_time", "max_memory", "memory_variance", "training_accuracy", "test_accuracy"]
-module_name = ["mnist_hierarchical_rnn_gpu", "addition_rnn_gpu", "babi_rnn_gpu"]
+module_name = ["mnist_acgan_gpu"]#["mnist_hierarchical_rnn_gpu", "addition_rnn_gpu", "babi_rnn_gpu"]
 result = dict()
 
 
 def run_benchmark():
     result[back] = dict()
-    test_summary = open('test_summary_' + str(back) + '.txt', 'w')
+    test_summary = open('test_summary_' + str(back) +
+                        str(GPU_NUM) + '.txt', 'w')
     for module in module_name:
         example = importlib.import_module(module)
         result[back][module] = copy.deepcopy(example.ret_dict)
