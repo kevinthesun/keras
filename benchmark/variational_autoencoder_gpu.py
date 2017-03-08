@@ -64,15 +64,15 @@ x_train = x_train.reshape((len(x_train), np.prod(x_train.shape[1:])))
 x_test = x_test.reshape((len(x_test), np.prod(x_test.shape[1:])))
 
 with profiler.Profiler(ret_dict):
-    vae.fit(x_train, x_train,
+    history = vae.fit(x_train, x_train,
             shuffle=True,
             nb_epoch=nb_epoch,
             batch_size=batch_size,
             validation_data=(x_test, x_test))
 
 ret_dict["training_time"] = str(ret_dict["training_time"]) + ' sec'
-ret_dict["training_accuracy"] = vae.evaluate(x_train, x_train, verbose=0)[1]
-ret_dict["test_accuracy"] = vae.evaluate(x_test, x_test, verbose=0)[1]
+et_dict["training_accuracy"] = history.history['loss'][-1]
+ret_dict["test_accuracy"] = history.history['val_loss'][-1]
 
 # build a model to project inputs on the latent space
 encoder = Model(x, z_mean)
