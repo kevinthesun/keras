@@ -83,7 +83,9 @@ for iteration in range(1, 60):
     print('-' * 50)
     print('Iteration', iteration)
     with profiler.Profiler(ret_dict):
-        model.fit(X, y, batch_size=128, nb_epoch=1)
+        history = model.fit(X, y, batch_size=128, nb_epoch=1)
+    ret_dict["training_accuracy"] = history.history['loss'][-1]
+    ret_dict["test_accuracy"] = 0
     total_time += ret_dict["training_time"]
     current_max_mem = max(current_max_mem, float(ret_dict["max_memory"][:-3]))
 

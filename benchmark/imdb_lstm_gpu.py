@@ -64,6 +64,6 @@ ret_dict["training_accuracy"] = model.evaluate(X_train, y_train, verbose=0)[1]
 
 score, acc = model.evaluate(X_test, y_test,
                             batch_size=batch_size)
-ret_dict["testing_accuracy"] = acc
+ret_dict["test_accuracy"] = acc
 print('Test score:', score)
 print('Test accuracy:', acc)
