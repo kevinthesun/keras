@@ -71,5 +71,5 @@ with profiler.Profiler(ret_dict):
             validation_data=(x_test, x_test))
 
 ret_dict["training_time"] = str(ret_dict["training_time"]) + ' sec'
-et_dict["training_accuracy"] = history.history['loss'][-1]
+ret_dict["training_accuracy"] = history.history['loss'][-1]
 ret_dict["test_accuracy"] = history.history['val_loss'][-1]
