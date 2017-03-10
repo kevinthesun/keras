@@ -65,10 +65,10 @@ x_test = x_test.reshape((len(x_test), np.prod(x_test.shape[1:])))
 
 with profiler.Profiler(ret_dict):
     history = vae.fit(x_train, x_train,
-            shuffle=True,
-            nb_epoch=nb_epoch,
-            batch_size=batch_size,
-            validation_data=(x_test, x_test))
+                      shuffle=True,
+                      nb_epoch=nb_epoch,
+                      batch_size=batch_size,
+                      validation_data=(x_test, x_test))
 
 ret_dict["training_time"] = str(ret_dict["training_time"]) + ' sec'
 ret_dict["training_accuracy"] = history.history['loss'][-1]
