@@ -6,9 +6,8 @@ import importlib
 back = os.environ['KERAS_BACKEND']
 GPU_NUM = int(os.environ['GPU_NUM'])
 metrics = ["training_time", "max_memory", "memory_variance", "training_accuracy", "test_accuracy"]
-module_name = ["antirectifier_gpu", "mnist_acgan_gpu",
-                 "imdb_bidirectional_lstm_gpu", "imdb_cnn_lstm_gpu", "imdb_lstm_gpu",
-                 "mnist_hierarchical_rnn_gpu", "addition_rnn_gpu", "babi_rnn_gpu", "conv_lstm_gpu", "lstm_text_generation_gpu"]
+module_name = ["antirectifier_gpu", "imdb_bidirectional_lstm_gpu", 
+                 "mnist_hierarchical_rnn_gpu", "addition_rnn_gpu", "babi_rnn_gpu", "lstm_text_generation_gpu"]
 result = dict()
 
 
