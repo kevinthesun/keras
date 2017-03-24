@@ -2811,9 +2811,11 @@ def pool2d(x, pool_size, strides=(1, 1),
     # Returns
         A tensor, result of 2D pooling.
     """
+    x = _preprocess_conv2d_input(x, dim_ordering)
     s = mx.sym.Pooling(data=x.symbol, kernel=pool_size, pool_type=pool_mode, pooling_convention=border_mode,
                        stride=strides)
-    return KerasSymbol(s)
+    out = _postprocess_conv2d_output(KerasSymbol(s), dim_ordering)
+    return out
 
 
 @keras_symbol_child
