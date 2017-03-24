@@ -1884,6 +1884,8 @@ if K.backend() == 'mxnet':
             K.set_model(self)
 
         def _adjust_module(self, inputs, phase):
+            if not hasattr(self, '_num_data'):
+                raise RuntimeError('You must compile your model before using it.')
             if self._num_data + self._num_label == len(inputs) - 1:
                 inputs = inputs[:-1]
             elif self._num_data == len(inputs) - 1:

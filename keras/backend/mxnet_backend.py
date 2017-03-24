@@ -2656,6 +2656,14 @@ def _preprocess_border_mode(border_mode, input_shape, kernel, strides, dilation)
         raise ValueError('Invalid border mode:', border_mode)
     return padding, np.any(is_slice), out_size
 
+def _preprocess_deconv2d_output(output_shape, dim_ordering):
+    if dim_ordering == 'default':
+        output_shape = image_dim_ordering()
+    if dim_ordering == 'th':
+        output_shape = output_shape[2:]
+    if dim_ordering == 'tf':
+        output_shape = output_shape[1:3]
+    return output_shape
 
 @keras_symbol_child
 def conv1d(x, kernel, stride=1, border_mode='valid',
@@ -2726,6 +2734,7 @@ def deconv2d(x, kernel, output_shape, strides=(1, 1),
         A tensor, result of transposed 2D convolution.
     """
     layout_kernel, nb_filter = _layout_kernel2(dim_ordering, kernel.shape)
+    output_shape = _preprocess_deconv2d_output(output_shape, dim_ordering)
     s = mx.sym.Deconvolution(data=x.symbol, name=kernel.name, kernel=layout_kernel, stride=strides,
                              num_filter=nb_filter, weight=kernel.symbol, no_bias=True, target_shape=output_shape)
     return KerasSymbol(s)
