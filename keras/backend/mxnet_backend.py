@@ -1907,7 +1907,18 @@ def arange(start, stop=None, step=1, dtype='int32'):
     The default type of the returned tensor is `'int32'` to
     match TensorFlow's default.
     """
+    #Match behavior of numpy by return empty sequence
     dtype = np.dtype(dtype)
+    if stop is None:
+        stop = start
+        start = 0
+    if (start - stop) * step >= 0:
+        return np.arange(0, dtype=dtype)
+    #Work around for single element list. In this case, if KerasSymbol is passed to eval,
+    #a scalar will be returned instead of array
+    #Also workaround for 'int64' dtype
+    if np.absolute(start - stop) <= np.absolute(step) or dtype == np.dtype('int64'):
+        return np.arange(start, stop, step, dtype=dtype)
     return KerasSymbol(mx.sym.arange(start=start, stop=stop, step=step, dtype=dtype))
 
 
@@ -2206,7 +2217,9 @@ def print_tensor(x, message=''):
     """Print the message and the tensor when evaluated and return the same
     tensor.
     """
-    print(message, eval(x))
+    ret = eval(x)
+    print(message, ret)
+    return ret
 
 
 @keras_symbol_child
@@ -2329,6 +2342,9 @@ def rnn(step_function, inputs, initial_states,
     else:
         masks = [None for _ in inputs]
 
+    if constants is None:
+        constants = []
+
     states = initial_states
     outputs = []
     prev_output = None
@@ -2364,8 +2380,8 @@ def switch(condition, then_expression, else_expression):
     # Returns
         The selected tensor.
     """
-    raise NotImplementedError
-
+    condition = eval(condition)
+    return then_expression if condition != 0 else else_expression
 
 @keras_symbol_child
 def in_train_phase(x, alt):
@@ -2983,7 +2999,15 @@ def random_binomial(shape, p=0.0, dtype=None, seed=None):
     # Returns
         A tensor.
     """
-    raise NotImplementedError
+    if dtype is None:
+        dtype = floatx()
+    dtype = np.dtype(dtype)
+    sym = mx.sym.where(condition=(mx.sym.uniform(shape=shape, dtype='float32') <= p),
+                       x=mx.sym.ones(shape=shape, dtype='float32'),
+                       y=mx.sym.zeros(shape=shape, dtype='float32'))
+    if dtype != np.float32:
+        sym = mx.sym.Cast(data=sym, dtype=dtype)
+    return KerasSymbol(sym)
 
 
 # CTC

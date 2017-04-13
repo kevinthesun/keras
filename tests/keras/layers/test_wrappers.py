@@ -5,6 +5,7 @@ from keras.utils.test_utils import keras_test
 from keras.layers import wrappers, Input
 from keras.layers import core, convolutional, recurrent
 from keras.models import Sequential, Model, model_from_json
+from keras import backend as K
 
 
 @keras_test
@@ -42,6 +43,7 @@ def test_TimeDistributed():
     assert_allclose(test_output, reference_output, atol=1e-05)
 
     # test with Convolution2D
+    K.set_image_dim_ordering('tf')
     model = Sequential()
     model.add(wrappers.TimeDistributed(convolutional.Convolution2D(5, 2, 2, border_mode='same'), input_shape=(2, 4, 4, 3)))
     model.add(core.Activation('relu'))

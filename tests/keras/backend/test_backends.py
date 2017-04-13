@@ -557,7 +557,7 @@ class TestBackend(object):
                 kernel_val = np.random.random(kernel_shape) - 0.5
 
                 kernel_th = KTH.variable(convert_kernel(kernel_val, dim_ordering='th'))
-                kernel_tf = KTF.variable(kernel_val)
+                kernel_tf = KTF.variable(convert_kernel(kernel_val, dim_ordering='th'))
 
                 zth = KTH.eval(KTH.conv2d(xth, kernel_th, dim_ordering='th'))
                 ztf = KTF.eval(KTF.conv2d(xtf, kernel_tf, dim_ordering='th'))
@@ -576,7 +576,7 @@ class TestBackend(object):
         kernel_val = np.random.random(kernel_shape) - 0.5
 
         kernel_th = KTH.variable(convert_kernel(kernel_val, dim_ordering='tf'))
-        kernel_tf = KTF.variable(kernel_val)
+        kernel_tf = KTF.variable(convert_kernel(kernel_val, dim_ordering='tf'))
 
         zth = KTH.eval(KTH.conv2d(xth, kernel_th, dim_ordering='tf'))
         ztf = KTF.eval(KTF.conv2d(xtf, kernel_tf, dim_ordering='tf'))
@@ -601,7 +601,7 @@ class TestBackend(object):
                 kernel_val = np.random.random(kernel_shape) - 0.5
 
                 kernel_th = KTH.variable(convert_kernel(kernel_val, dim_ordering='th'))
-                kernel_tf = KTF.variable(kernel_val)
+                kernel_tf = KTF.variable(convert_kernel(kernel_val, dim_ordering='th'))
 
                 zth = KTH.eval(KTH.conv3d(xth, kernel_th, dim_ordering='th'))
                 ztf = KTF.eval(KTF.conv3d(xtf, kernel_tf, dim_ordering='th'))
@@ -621,7 +621,7 @@ class TestBackend(object):
         kernel_val = np.random.random(kernel_shape) - 0.5
 
         kernel_th = KTH.variable(convert_kernel(kernel_val, dim_ordering='tf'))
-        kernel_tf = KTF.variable(kernel_val)
+        kernel_tf = KTF.variable(convert_kernel(kernel_val, dim_ordering='tf'))
 
         zth = KTH.eval(KTH.conv3d(xth, kernel_th, dim_ordering='tf'))
         ztf = KTF.eval(KTF.conv3d(xtf, kernel_tf, dim_ordering='tf'))
