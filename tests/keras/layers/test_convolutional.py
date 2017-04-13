@@ -14,6 +14,7 @@ if K.backend() == 'tensorflow':
 else:
     _convolution_border_modes = ['valid', 'same', 'full']
 
+K.set_image_dim_ordering('tf')
 
 @keras_test
 def test_convolution_1d():
@@ -387,6 +388,7 @@ def test_averagepooling_3d():
 
 @keras_test
 def test_zero_padding_1d():
+    K.set_image_dim_ordering('th')
     nb_samples = 2
     input_dim = 2
     nb_steps = 5
@@ -427,6 +429,7 @@ def test_zero_padding_1d():
 
 @keras_test
 def test_zero_padding_2d():
+    K.set_image_dim_ordering('th')
     nb_samples = 2
     stack_size = 2
     input_nb_row = 4
@@ -494,6 +497,7 @@ def test_zero_padding_2d():
 
 
 def test_zero_padding_3d():
+    K.set_image_dim_ordering('th')
     nb_samples = 2
     stack_size = 2
     input_len_dim1 = 4
@@ -501,8 +505,8 @@ def test_zero_padding_3d():
     input_len_dim3 = 3
 
     input = np.ones((nb_samples,
-                     input_len_dim1, input_len_dim2, input_len_dim3,
-                     stack_size))
+                     stack_size,
+                     input_len_dim1, input_len_dim2, input_len_dim3))
 
     # basic test
     layer_test(convolutional.ZeroPadding3D,
@@ -515,9 +519,9 @@ def test_zero_padding_3d():
     output = layer(K.variable(input))
     np_output = K.eval(output)
     for offset in [0, 1, -1, -2]:
-        assert_allclose(np_output[:, offset, :, :, :], 0.)
         assert_allclose(np_output[:, :, offset, :, :], 0.)
         assert_allclose(np_output[:, :, :, offset, :], 0.)
+        assert_allclose(np_output[:, :, :, :, offset], 0.)
     assert_allclose(np_output[:, 2:-2, 2:-2, 2:-2, :], 1.)
     layer.get_config()
 
