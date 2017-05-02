@@ -2983,7 +2983,15 @@ def random_binomial(shape, p=0.0, dtype=None, seed=None):
     # Returns
         A tensor.
     """
-    raise NotImplementedError
+    if dtype is None:
+        dtype = floatx()
+    dtype = np.dtype(dtype)
+    sym = mx.sym.where(condition=(mx.sym.uniform(shape=shape, dtype='float32') <= p),
+                       x=mx.sym.ones(shape=shape, dtype='float32'),
+                       y=mx.sym.zeros(shape=shape, dtype='float32'))
+    if dtype != np.float32:
+        sym = mx.sym.Cast(data=sym, dtype=dtype)
+    return KerasSymbol(sym)
 
 
 # CTC
