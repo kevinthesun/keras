@@ -670,6 +670,7 @@ if K.backend() == 'mxnet':
             base_config = super(SGD, self).get_config()
             return dict(list(base_config.items()) + list(config.items()))
 
+
     class Adagrad(MXOptimizer, K.mx.optimizer.AdaGrad):
         def __init__(self, lr=0.01, epsilon=1e-8, decay=0., clipnorm=None, **kwargs):
             K.mx.optimizer.AdaGrad.__init__(self, learning_rate=lr, eps=epsilon, clip_gradient=clipnorm, **kwargs)
@@ -681,6 +682,7 @@ if K.backend() == 'mxnet':
                       'epsilon': float(K.get_value(self.float_stable_eps))}
             base_config = super(Adagrad, self).get_config()
             return dict(list(base_config.items()) + list(config.items()))
+
 
     class Adadelta(MXOptimizer, K.mx.optimizer.AdaDelta):
         def __init__(self, lr=1.0, rho=0.95, epsilon=1e-8, decay=0., clipnorm=None, **kwargs):
@@ -694,6 +696,7 @@ if K.backend() == 'mxnet':
                       'epsilon': self.epsilon}
             base_config = super(Adadelta, self).get_config()
             return dict(list(base_config.items()) + list(config.items()))
+
 
     class Adam(MXOptimizer, K.mx.optimizer.Adam):
         def __init__(self, lr=0.001, beta_1=0.9, beta_2=0.999,
@@ -710,6 +713,7 @@ if K.backend() == 'mxnet':
                       'epsilon': self.epsilon}
             base_config = super(Adam, self).get_config()
             return dict(list(base_config.items()) + list(config.items()))
+
 
     class RMSprop(MXOptimizer, K.mx.optimizer.RMSProp):
         def __init__(self, lr=0.001, rho=0.9, epsilon=1e-8, decay=0., clipnorm=None, **kwargs):
