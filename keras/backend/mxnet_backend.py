@@ -12,6 +12,7 @@ _EXECUTOR = None
 _MODEL = None
 _REENTRY = False
 
+placeholder_name_dict = dict()
 set_image_dim_ordering('th')
 
 
@@ -526,6 +527,13 @@ def placeholder(shape=None, ndim=None, dtype=None, sparse=False, name=None):
     dtype = np.dtype(dtype)
     if name is None:
         name = _autogen_name('placeholder')
+    elif name in placeholder_name_dict:
+        placeholder_name_dict[name] += 1
+        name = name + '_' + str(placeholder_name_dict[name] - 1)
+        placeholder_name_dict[name] = 1 if name not in placeholder_name_dict \
+                                        else placeholder_name_dict[name] + 1
+    else:
+        placeholder_name_dict[name] = 1
     if not shape:
         if ndim:
             shape = tuple([0 for _ in range(ndim)])
@@ -2516,9 +2524,13 @@ def sparse_categorical_crossentropy(output, target, from_logits=False):
     """Categorical crossentropy between an output tensor
     and a target tensor, where the target is an integer tensor.
     """
-    output = mx.sym.softmax_cross_entropy(output.symbol, target.symbol)
+    assert not from_logits
+    target = KerasSymbol(mx.sym.one_hot(flatten(target).symbol, output.shape[1]))
+    axis = ndim(output) - 1
+    output = output.symbol
+    output = mx.sym.clip(output, a_min=_EPSILON, a_max=1. - _EPSILON)
+    output = - mx.sym.sum(target.symbol * mx.sym.log(output), axis=axis)
     return KerasSymbol(output)
-
 
 @keras_symbol_child
 def binary_crossentropy(output, target, from_logits=False):
