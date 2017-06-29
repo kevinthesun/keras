@@ -420,6 +420,7 @@ class KerasSymbol(object):
                     lhs=self.symbol,
                     rhs=other.symbol))
 
+    @keras_symbol_child
     def __pow__(self, power, modulo=None):
         return KerasSymbol(self.symbol.__pow__(power), neighbor=[self])
 
