@@ -1815,7 +1815,7 @@ if K.backend() == 'mxnet':
                 self._context = [mx.current_context()]
             else:
                 if isinstance(context, str):
-                    self_context = [context]
+                    context = [context]
                 self._context = [str2context(s) for s in context]
             self._data_names = [x.name for x in self.inputs]
             self._label_names = [x.name for x in self.targets + self.sample_weights]
